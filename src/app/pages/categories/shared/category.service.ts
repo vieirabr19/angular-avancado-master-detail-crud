@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map, catchError, flatMap } from 'rxjs/operators';
 
 import { Category } from './category.model';
@@ -46,7 +46,7 @@ export class CategoryService {
     )
   }
 
-  delete(id: number): Observable<Category>{
+  delete(id: number): Observable<any>{
     const url: string = `${this.apiPath}/${id}`;
     return this.http.delete(url).pipe(
       map(() => null),

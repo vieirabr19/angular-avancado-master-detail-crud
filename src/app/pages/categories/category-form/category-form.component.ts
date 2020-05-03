@@ -15,15 +15,15 @@ import { CategoryService } from "../shared/category.service";
 })
 export class CategoryFormComponent implements OnInit, AfterContentChecked {
   currecyAction: string; //define se está editando ou criando um novo recurso  
-  categoryForm: FormGroup; //Formulário de categoria do tipo FormGroup
   pegeTitle: string; //define o titulo da pagina de acordo com currecyAction (edit | new)
   serverErroMessages: string[] = null; //Exibi um array de mensagens de erros do servidor
-  submitingForm: boolean = false; //Objeto desabilita o botão enviar para enviar não várias vezes
+  categoryForm: FormGroup; //Formulário de categoria do tipo FormGroup
+  submitingForm: boolean = false; //Objeto desabilita o botão enviar para não enviar várias vezes
   category: Category = new Category(); //Objeto do recurso a ser trabalhado na pagina
 
   constructor(
     private categoryService: CategoryService,
-    private route: ActivatedRoute, // rotas
+    private route: ActivatedRoute, // rota
     private router: Router, //roteador
     private formBuilder: FormBuilder //contrutor de formulários
   ) { }
@@ -34,7 +34,19 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     this.loadCategory();
   }
 
-  ngAfterContentChecked() {
+  ngAfterContentChecked(): void{
+    this.setPageTitle();
+  }
+
+  // função para submeter o formulário
+  submitForm(): void{
+    this.submitingForm = true;
+
+    if(this.currecyAction == 'new'){
+      this.createCategory();
+    }else{
+      this.updateCategory();
+    }
   }
 
   //PRIVATE METHODS
@@ -47,6 +59,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  // constroi o formulário
   private buildCategoryForm(): void {
     this.categoryForm = this.formBuilder.group({
       id: [null],
@@ -55,10 +68,11 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     })
   }
 
+  // carrega a categoria por ID
   private loadCategory(): void {
     if (this.currecyAction == 'edit') {
       this.route.paramMap.pipe(
-        switchMap((params) => this.categoryService.getById(+params.get('id')))
+        switchMap(params => this.categoryService.getById(+params.get('id')))
       )
       .subscribe((category) => {
         this.category = category;
@@ -68,12 +82,51 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  setPageTitle(): void{
+  // altera o titulo da página conforme o valor da váriavel ( currecyAction )
+  private setPageTitle(): void{
     if(this.currecyAction == 'new'){
-      this.pegeTitle = 'Cadastro de Nova categoria.'
+      this.pegeTitle = 'Cadastro de nova categoria.'
     }else{
       const categoryName = this.category.name || '';
-      this.pegeTitle = `Edintando Categoria: ${categoryName}`;
+      this.pegeTitle = `Edintando categoria: ${categoryName}`;
+    }
+  }
+
+  private createCategory(): void{
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+    // cadastra os dados no in-memory-web-api
+    this.categoryService.cerate(category).subscribe(
+      category => this.actionForSuccess(category),
+      error => this.actionForError(error)
+    )
+  }
+
+  private updateCategory(): void{
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+    this.categoryService.update(category).subscribe(
+      category => this.actionForSuccess(category),
+      error => this.actionForError(error)
+    )
+  }
+
+  private actionForSuccess(category: Category): void{
+    toastr.success('Solicitação enviada com sucesso!');
+
+    // redirect/realod component page categories/id/edir
+    this.router.navigateByUrl('categories', {skipLocationChange: true})
+      .then(() => this.router.navigate(['categories', category.id, 'edit']))
+  }
+
+  private actionForError(error): void{
+    toastr.errer('Ocorreu um erro ao porcessar a sua solicitação!');
+    this.submitingForm = false;
+
+    if(error.status === 422){
+      this.serverErroMessages = JSON.parse(error._body).error;
+    }else{
+      this.serverErroMessages = ['Falaha na comunicação coo o servidor. por favor, tente mais tarde!'];
     }
   }
 
