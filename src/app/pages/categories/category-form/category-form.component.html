@@ -8,14 +8,10 @@
 
 <div class="row mb-4">
   <div class="col-md">
-    <h1 class="h2 border-left pl-2">
-      {{ pegeTitle }}
-    </h1>
+    <h1 class="h2 border-left pl-2">{{ pegeTitle }}</h1>
   </div>
   <div class="col-md">
-    <a routerLink="/categories" class="btn btn-light float-right">
-      << Voltar
-    </a>
+    <a routerLink="/categories" class="btn btn-light float-right"><< Voltar</a>
   </div>
 </div>
 
@@ -41,6 +37,13 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="alert alert-danger mt-3" *ngIf="serverErrorMessages">
+    <strong>Erro no Serdor:</strong>
+    <ul>
+      <li *ngFor="let error of serverErrorMessages">{{ error }}</li>
+    </ul>
   </div>
 
   <button [disabled]="submitingForm || categoryForm.invalid" type="submit" class="btn btn-primary btn-lg float-right mt-3">Salvar</button>

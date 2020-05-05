@@ -16,7 +16,7 @@ import { CategoryService } from "../shared/category.service";
 export class CategoryFormComponent implements OnInit, AfterContentChecked {
   currecyAction: string; //define se está editando ou criando um novo recurso  
   pegeTitle: string; //define o titulo da pagina de acordo com currecyAction (edit | new)
-  serverErroMessages: string[] = null; //Exibi um array de mensagens de erros do servidor
+  serverErrorMessages: string[] = null; //Exibi um array de mensagens de erros do servidor
   categoryForm: FormGroup; //Formulário de categoria do tipo FormGroup
   submitingForm: boolean = false; //Objeto desabilita o botão enviar para não enviar várias vezes
   category: Category = new Category(); //Objeto do recurso a ser trabalhado na pagina
@@ -94,7 +94,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
 
   private createCategory(): void{
     const category: Category = Object.assign(new Category(), this.categoryForm.value);
-
+    
     // cadastra os dados no in-memory-web-api
     this.categoryService.cerate(category).subscribe(
       category => this.actionForSuccess(category),
@@ -111,22 +111,24 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     )
   }
 
+  // feedback de sucesso no cadastro da nova categoria
   private actionForSuccess(category: Category): void{
     toastr.success('Solicitação enviada com sucesso!');
-
+    
     // redirect/realod component page categories/id/edir
     this.router.navigateByUrl('categories', {skipLocationChange: true})
       .then(() => this.router.navigate(['categories', category.id, 'edit']))
   }
 
-  private actionForError(error): void{
-    toastr.errer('Ocorreu um erro ao porcessar a sua solicitação!');
+  // feedback de erros no cadastro da nova categoria
+  private actionForError(error: any): void{
+    toastr.error('Ocorreu um erro ao porcessar a sua solicitação!');
     this.submitingForm = false;
 
     if(error.status === 422){
-      this.serverErroMessages = JSON.parse(error._body).error;
+      this.serverErrorMessages = JSON.parse(error._body).error;
     }else{
-      this.serverErroMessages = ['Falaha na comunicação coo o servidor. por favor, tente mais tarde!'];
+      this.serverErrorMessages = ['Falha na comunicação com o servidor. Por favor, tente mais tarde!'];
     }
   }
 
