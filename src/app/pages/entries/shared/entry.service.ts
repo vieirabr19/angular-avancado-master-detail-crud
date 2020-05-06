@@ -59,13 +59,17 @@ export class EntryService {
   // Imprime um array de categorias
   private jsonDataToCategories(jsonData: any[]): Entry[] {
     const entries: Entry[] = [];
-    jsonData.forEach(element => entries.push(element as Entry));
+
+    jsonData.forEach(element => {
+      const entry = Object.assign(new Entry(), element);
+      entries.push(entry);
+    });
     return entries;
   }
 
   // Imprime uma categoria por ID
   private jsonDataToEntry(jsonData: any): Entry{
-    return jsonData as Entry;
+    return Object.assign(new Entry(), jsonData);
   }
 
   // Erroa na requisição
