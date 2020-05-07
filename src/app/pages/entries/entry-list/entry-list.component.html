@@ -1,7 +1,7 @@
 <nav class="mb-5">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-    <li class="breadcrumb-item active">Lançamentos</li>
+    <li class="breadcrumb-item active">Entries</li>
   </ol>
 </nav>
 
@@ -34,8 +34,9 @@
         {{ entry.category.name }}
       </td>
       <td class="text-right">
-        <strong [class.text-success]="entry.type == 'revenue'" [class.text-danger]="entry.type == 'expense'">{{ entry.amount }}</strong><br />
-        <span class="badge badge-light">{{ entry.paidText }}</span>
+        <!-- <strong [class.text-success]="entry.type == 'revenue'" [class.text-danger]="entry.type == 'expense'">{{ entry.amount }}</strong><br /> -->
+        <strong [ngClass]="(entry.type == 'revenue') ? 'text-success' : 'text-danger'">{{ entry.amount }}</strong><br />
+        <span class="badge badge-light" [ngClass]="(entry.paidText == 'pago') ? 'text-success' : 'text-danger'">{{ entry.paidText }}</span>
       </td>
       <td class="text-center">
         <a [routerLink]="[entry.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
