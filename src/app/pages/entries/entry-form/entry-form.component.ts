@@ -8,6 +8,9 @@ import toastr from "toastr";
 import { Entry } from "../shared/entry.model";
 import { EntryService } from "../shared/entry.service";
 
+import { Category } from "../../categories/shared/category.model";
+import { CategoryService} from "../../categories/shared/category.service";
+
 @Component({
   selector: 'app-entry-form',
   templateUrl: './entry-form.component.html',
@@ -20,18 +23,45 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   entryForm: FormGroup; //Formulário de lançamento do tipo FormGroup
   submitingForm: boolean = false; //Objeto desabilita o botão enviar para não enviar várias vezes
   entry: Entry = new Entry(); //Objeto do recurso a ser trabalhado na pagina
+  categories: Category[]; //Objeto do tipo categoria
+
+  imaskConfig = {
+    mask: Number, //ativar máscara numérica
+    scale: 2,  //dígitos após o ponto, 0 para números inteiros
+    signed: false,
+    thousandsSeparator: '',  //qualquer caractere único
+    padFractionalZeros: true,  //se true, então preenche zeros no final do comprimento da escala
+    normalizeZeros: true,  //acrescenta ou remove zeros nas extremidades
+    radix: ',',  //delimitador fracionário
+    mapToRadix: ['.']
+  };
+
+  ptBR = {
+    firstDayOfWeek: 0,
+    dayNames: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+    dayNamesShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+    dayNamesMin: ["Do","Se","Te","Qu","Qu","Se","Sa"],
+    monthNames: [ "Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Augusto","Setembro","Outubro","Novembro","Dezembro" ],
+    monthNamesShort: [ "Jan", "Fev", "Mar", "Abr", "Mai", "Jun","Jul", "Aug", "Set", "Out", "Nov", "Dez" ],
+    today: 'Hoje',
+    clear: 'Limpar',
+    dateFormat: 'mm/dd/yy',
+    weekHeader: 'Wk'
+  };
 
   constructor(
-    private entryService: EntryService,
-    private route: ActivatedRoute, // rota
+    private route: ActivatedRoute, //rota
     private router: Router, //roteador
-    private formBuilder: FormBuilder //contrutor de formulários
+    private formBuilder: FormBuilder, //contrutor de formulários
+    private entryService: EntryService,
+    private categoryService: CategoryService //categoryService
   ) { }
 
   ngOnInit(): void {
     this.setCurrecyAction();
     this.buildEntryForm();
     this.loadEntry();
+    this.loadCategories();
   }
 
   ngAfterContentChecked(): void{
@@ -47,6 +77,16 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     }else{
       this.updateEntry();
     }
+  }
+
+  // monta um objeto de array com as opções do tipo
+  get typesOptions(): Array<any>{
+    return Object.entries(Entry.types).map(([value, text]) => {
+      return {
+        value: value,
+        text: text
+      };
+    })
   }
 
   //PRIVATE METHODS
@@ -65,10 +105,10 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       id: [null],
       name: [null, [Validators.required, Validators.minLength(2)]],
       description: [null],
-      type: [null, [Validators.required]],
+      type: ['revenue', [Validators.required]],
       amount: [null, [Validators.required]],
       date: [null, [Validators.required]],
-      paid: [null, [Validators.required]],
+      paid: [true, [Validators.required]],
       categoryId: [null, [Validators.required]]
     })
   }
@@ -85,6 +125,13 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       },
       (error) => console.log('Ocorreu um erro no servidor, tente mais tarde.'))
     }
+  }
+
+  // carrega as acaterias
+  private loadCategories(): void{
+    this.categoryService.getAll().subscribe(
+      categories => this.categories = categories
+    )
   }
 
   // altera o titulo da página conforme o valor da váriavel ( currecyAction )

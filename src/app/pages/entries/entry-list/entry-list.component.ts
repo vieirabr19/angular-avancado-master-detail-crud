@@ -18,7 +18,7 @@ export class EntryListComponent implements OnInit {
 
   ngOnInit(): void {
     this.entryService.getAll().subscribe(
-      entries => {this.entries = entries; console.log(entries)},
+      entries => this.entries = entries,
       error => console.log('Erro ao carregar a lista!')
     )
   }
