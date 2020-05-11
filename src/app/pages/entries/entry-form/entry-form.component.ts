@@ -80,13 +80,15 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   }
 
   // monta um objeto de array com as opções do tipo
-  get typesOptions(): Array<any>{
-    return Object.entries(Entry.types).map(([value, text]) => {
-      return {
-        value: value,
-        text: text
-      };
-    })
+  get typeOptions(): Array<any>{
+    return Object.entries(Entry.types).map(
+      ([value, text]) => {
+        return {
+          text: text,
+          value: value
+        }
+      }
+    )
   }
 
   //PRIVATE METHODS
@@ -105,7 +107,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       id: [null],
       name: [null, [Validators.required, Validators.minLength(2)]],
       description: [null],
-      type: ['revenue', [Validators.required]],
+      type: ["revenue", [Validators.required]],
       amount: [null, [Validators.required]],
       date: [null, [Validators.required]],
       paid: [true, [Validators.required]],
