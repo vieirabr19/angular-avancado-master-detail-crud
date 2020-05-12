@@ -26,7 +26,9 @@
         <div class="form-group col-md-2">
           <label for="type">Tipo</label>
           <select name="type" id="type" formControlName="type" class="form-control">
-            <option *ngFor="let option of typeOptions" [value]="option.value">{{ option.text }}</option>
+            <!-- <option *ngFor="let option of typeOptions" [value]="option.value">{{ option.text }}</option> -->
+            <option value="expense">Despesas</option>
+            <option value="revenue">Receita</option>
           </select>
 
           <div class="text-danger" *ngIf="entryForm.get('type').invalid && (entryForm.get('type').dirty || entryForm.get('type').touched)">
@@ -109,3 +111,5 @@
 
   <button [disabled]="submitingForm || entryForm.invalid" type="submit" class="btn btn-primary btn-lg float-right mt-3">Salvar</button>
 </form>
+
+<pre>{{entryForm.value | json}}</pre>
