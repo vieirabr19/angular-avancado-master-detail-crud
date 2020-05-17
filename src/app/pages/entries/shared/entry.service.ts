@@ -14,7 +14,9 @@ export class EntryService extends BaseResourceService<Entry> {
   constructor(
     protected injector: Injector,
     private categoryService: CategoryService
-  ){ super("api/entries", injector); }
+  ){
+    super( "api/entries", injector, Entry.fromJson );
+  }
 
   cerate(entry: Entry): Observable<Entry>{
     return this.categoryService.getById(entry.categoryId).pipe(
@@ -33,23 +35,4 @@ export class EntryService extends BaseResourceService<Entry> {
       })
     )
   }
-
-  // PROTECTED
-
-  // Imprime um array de categorias
-  protected jsonDataToResources(jsonData: any[]): Entry[] {
-    const resources: Entry[] = [];
-
-    jsonData.forEach(element => {
-      const entry = Object.assign(new Entry(), element);
-      resources.push(entry);
-    });
-    return resources;
-  }
-
-  // Imprime uma categoria por ID
-  protected jsonDataToResource(jsonData: any): Entry{
-    return Object.assign(new Entry(), jsonData);
-  }
-
 }
