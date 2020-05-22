@@ -19,7 +19,7 @@ export class EntryService extends BaseResourceService<Entry> {
   }
 
   cerate(entry: Entry): Observable<Entry>{
-    return this.setCategoryAndSendToServer(entry, super.cerate.bind(this));
+    return this.setCategoryAndSendToServer(entry, super.create.bind(this));
   }
 
   update(entry: Entry): Observable<Entry>{
