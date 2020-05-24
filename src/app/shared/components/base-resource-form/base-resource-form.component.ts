@@ -1,5 +1,5 @@
-import {  OnInit, AfterContentChecked, Injector } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { OnInit, AfterContentChecked, Injector } from '@angular/core';
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { switchMap } from "rxjs/operators";
@@ -10,7 +10,7 @@ import { BaseResourceService } from "../../services/base-resource.service";
 
 export abstract class BaseResourceFormComponent<T extends BaseResourceModel> implements OnInit, AfterContentChecked {
   currecyAction: string; //define se está editando ou criando um novo recurso  
-  resourceForm: FormGroup; //Formulário de categoria do tipo FormGroup
+  resourceForm: FormGroup; //Formulário do tipo FormGroup
   pegeTitle: string; //define o titulo da pagina de acordo com currecyAction (edit | new)
   serverErrorMessages: string[] = null; //Exibi um array de mensagens de erros do servidor
   submitingForm: boolean = false; //Objeto desabilita o botão enviar para não enviar várias vezes
@@ -51,7 +51,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     }
   }
 
-  //PRIVATE METHODS
+  //PROTECTED METHODS
 
   protected setCurrecyAction(): void {
     if (this.route.snapshot.url[0].path == 'new') {
@@ -114,8 +114,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
   // feedback de sucesso no cadastro da nova categoria
   protected actionForSuccess(resource: T): void{
     toastr.success('Solicitação processada com sucesso!');
-
-    const baseComponentPath = this.route.snapshot.parent.url[0].path; 
+    const baseComponentPath = this.route.snapshot.parent.url[0].path;
     
     // redirect/realod component page categories/id/edir
     this.router.navigateByUrl(baseComponentPath, {skipLocationChange: true})
