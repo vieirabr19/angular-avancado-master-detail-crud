@@ -18,7 +18,7 @@ export class CategoryListComponent implements OnInit {
 
   ngOnInit(): void {
     this.categoryService.getAll().subscribe(
-      categories => this.categories = categories,
+      categories => this.categories = categories.sort((a, b) => b.id - a.id),
       error => console.log('Erro ao carregar a lista!')
     )
   }

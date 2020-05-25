@@ -32,7 +32,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
   ngOnInit(): void {
     this.setCurrecyAction();
-    this.buildCResourceForm();
+    this.buildResourceForm();
     this.loadResource();
   }
 
@@ -133,6 +133,6 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     }
   }
 
-  protected abstract buildCResourceForm(): void;
+  protected abstract buildResourceForm(): void;
 
 }

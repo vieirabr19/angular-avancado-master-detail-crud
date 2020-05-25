@@ -19,7 +19,7 @@ export class CategoryFormComponent extends BaseResourceFormComponent<Category> {
     super(injector, categoryService, Category.fromJson, new Category());
   }
 
-  protected buildCResourceForm():void {
+  protected buildResourceForm():void {
     this.resourceForm = this.formBuilder.group({
       id: [null],
       name: [null, [Validators.required, Validators.minLength(2)]],
@@ -32,7 +32,7 @@ export class CategoryFormComponent extends BaseResourceFormComponent<Category> {
   }
 
   protected editionPageTitle(): string{
-    const categoryName = this.resource.name || "";
-    return `Editando categoria: ${categoryName}`;
+    const resourceName = this.resource.name || "";
+    return `Editando categoria: ${resourceName}`;
   }
 }
