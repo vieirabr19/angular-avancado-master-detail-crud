@@ -1,10 +1,4 @@
-<nav class="mb-5">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-    <li class="breadcrumb-item"><a routerLink="/entries">Lançamentos</a></li>
-    <li class="breadcrumb-item active">{{ pegeTitle }}</li>
-  </ol>
-</nav>
+<app-bread-crumb [items]="[{link: '/entries', text: 'Lançamentos'}, {text: pegeTitle}]"></app-bread-crumb>
 
 <div class="row mb-4">
   <div class="col-md-9">
@@ -109,5 +103,3 @@
 
   <button [disabled]="submitingForm || resourceForm.invalid" type="submit" class="btn btn-primary btn-lg float-right mt-3">Salvar</button>
 </form>
-
-<pre>{{resourceForm.value | json}}</pre>
