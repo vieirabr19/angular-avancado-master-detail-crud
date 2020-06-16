@@ -19,24 +19,24 @@ export class FormFieldErrorComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  //mostra a mensagem de acordo com erro validado no campo
   public get erroMessage(): string | null{
-    if(this.mustShowErroMessege()){
-      return this.getErrorMessage();
+    if( this.mustShowMessage() ){
+      return this.getErrorMesssage();
     }else{
       return null;
     }
   }
 
-  private mustShowErroMessege(): boolean{
+  //valida se o campo foi tocado e mostra a mensagem
+  private mustShowMessage(): boolean{
     return this.formControl.invalid && (this.formControl.dirty || this.formControl.touched);
   }
 
-  private getErrorMessage(): string | null{
+  //exibe as mensagens por erros
+  private getErrorMesssage(): string | null{
     if(this.formControl.errors.required){
-      return "nome obrigatório";
-    }
-    else if(this.formControl.errors.email){
-      return "formato de e-mail inválido";
+      return "dado obrigatório";
     }
     else if(this.formControl.errors.minlength){
       const requiredLength = this.formControl.errors.minlength.requiredLength;
