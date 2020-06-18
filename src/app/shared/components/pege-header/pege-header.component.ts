@@ -11,6 +11,7 @@ export class PegeHeaderComponent implements OnInit {
   @Input('button-text') buttonText: string;
   @Input('button-class') buttonClass: string;
   @Input('button-link') buttonLink: string;
+  @Input('show-button') ShowButton: boolean = true;
 
   constructor() { }
 
